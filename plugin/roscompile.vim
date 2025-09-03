@@ -8,7 +8,8 @@ function! s:SetCompileCommandsFromScript() abort
 	let l:script = expand('<sfile>:p:h:h') . 'python/ycm_like_behavior.py'
 	let l:file = expand('%:p')
 	"echom 'called ycm_like_behavior.py'
-	let l:dir = system('python ' . shellescape(l:script) . ' ' . shellescape(l:file))
+	let l:python_cmd = executable('python3') ? 'python3' : 'python'
+	let l:dir = system(l:python_cmd . ' ' . shellescape(l:script) . ' ' . shellescape(l:file))
 	let l:dir = substitute(l:dir, '\n+\$', '', '')
 
 	if !empty(l:dir)
