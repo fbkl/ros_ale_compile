@@ -13,15 +13,22 @@ def find_compile_commands(some_file_ref):
     """
     some_file = path.abspath(some_file_ref)
     my_workspaces = get_workspaces()
-    trimmed_devel = []
-    for ws in my_workspaces:
-        trimmed_devel.append(ws.split('devel')[0])
+    
     found_ws = None
-    #print(trimmed_devel)
-    for ws in trimmed_devel:
-        if ws in some_file:
-            found_ws = ws
-            break 
+    is_isolated = False
+    for devel_name in ['devel', 'devel_isolated'] 
+        trimmed_devel = []
+        for ws in my_workspaces:
+            trimmed_devel.append(ws.split(devel_name)[0])
+        #print(trimmed_devel)
+        for ws in trimmed_devel:
+            if ws in some_file:
+                found_ws = ws
+                break 
+        if found_ws:
+            if devel_name == 'devel_isolated':
+                is_isolated = True
+            break
 
     if not found_ws:
         print('#ERROR: could not find file in any workspace. Worspaces need to be sourced for this thing to work!!')
@@ -59,9 +66,13 @@ def find_compile_commands(some_file_ref):
         print('#ERROR: could not parse package.xml in found package folder: '+file_dir)
         return
 
-    my_build_dir_ccs = path.join(found_ws, "build", package_name, "compile_commands.json")
-    my_build_dir = path.join(found_ws, "build", package_name)
-
+    build_dir_name = "build"
+    if is_isolated:
+        build_dir_name = "build_isolated"
+    
+    my_build_dir_ccs = path.join(found_ws, build_dir_name, package_name, "compile_commands.json")
+    my_build_dir = path.join(found_ws, build_dir_name, package_name)
+    
     if path.exists(my_build_dir_ccs):
         print(my_build_dir, end="")
         return
