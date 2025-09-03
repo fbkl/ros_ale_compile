@@ -9,6 +9,12 @@ try:
     from catkin.find_in_workspaces import get_workspaces
 except:
     print('#ERROR: cannot import catkin.find_in_workspaces. Is ROS installed? Did you source your environment?')
+try:
+    import warnings
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
+except:
+    pass
+
 
 def find_compile_commands(some_file_ref):
     """
@@ -64,11 +70,11 @@ def find_compile_commands(some_file_ref):
     package_name = ""
     root = tree.getroot()
     try:
+        package_name = root.find('name').text
+    except:
         for child in root.getchildren():
             if child.tag == 'name':
                 package_name = child.text
-    except:
-        package_name = root.find('name').text
     if not package_name:
         print('#ERROR: could not parse package.xml in found package folder: '+file_dir)
         return
