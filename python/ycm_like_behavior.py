@@ -5,7 +5,10 @@ from __future__ import print_function
 from os import path
 from glob import glob
 import xml.etree.ElementTree as ET
-from catkin.find_in_workspaces import get_workspaces
+try:
+    from catkin.find_in_workspaces import get_workspaces
+except:
+    print('#ERROR: cannot import catkin.find_in_workspaces. Is ROS installed? Did you source your environment?')
 
 def find_compile_commands(some_file_ref):
     """
@@ -16,10 +19,11 @@ def find_compile_commands(some_file_ref):
     
     found_ws = None
     is_isolated = False
-    for devel_name in ['devel', 'devel_isolated'] 
+    for devel_name in ['devel_isolated','devel']: 
         trimmed_devel = []
         for ws in my_workspaces:
-            trimmed_devel.append(ws.split(devel_name)[0])
+            if devel_name in ws:
+                trimmed_devel.append(ws.split(devel_name)[0])
         #print(trimmed_devel)
         for ws in trimmed_devel:
             if ws in some_file:
@@ -58,10 +62,13 @@ def find_compile_commands(some_file_ref):
     ## should have found package, then the name of the package is not necessari
     tree = ET.parse(path.join(file_dir, "package.xml"))
     package_name = ""
-    for child in tree.getroot().getchildren():
-        if child.tag == 'name':
-            package_name = child.text
-
+    root = tree.getroot()
+    try:
+        for child in root.getchildren():
+            if child.tag == 'name':
+                package_name = child.text
+    except:
+        package_name = root.find('name').text
     if not package_name:
         print('#ERROR: could not parse package.xml in found package folder: '+file_dir)
         return
