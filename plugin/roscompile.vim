@@ -1,6 +1,6 @@
 " plugin/roscompile.vim
-let g:ale_cpp_clangd_executable = '/usr/bin/clangd-10'
-let g:ale_cpp_clangtidy_executable = '/usr/bin/clang-tidy-10'
+let g:ale_cpp_clangd_executable = '/usr/bin/clangd'
+let g:ale_cpp_clangtidy_executable = '/usr/bin/clang-tidy'
 
 
 
