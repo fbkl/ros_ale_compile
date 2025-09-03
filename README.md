@@ -1,7 +1,7 @@
 
 # Install:
 
-add to your `.vimrc` the lines:
+add to your `.vimrc` the lines (this uses Vundle):
 
     Plugin 'dense-analysis/ale'
     Plugin 'fbkl/ros_ale_compile'
@@ -22,3 +22,21 @@ Now you need the `compile_commands.json` files to be generated. Either do:
 or add to each CMakeLists.txt the line:
 
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# How it works:
+
+This will find the `compile_commands.json` files for each of your packages and use those commands to add the necessary flags for both clangd and clang-tidy. Unfortunately if you use different flags for gcc, this might not work properly. 
+
+For this to be possible you need to source the workspace which you are going to be using.
+
+##  Usage:
+
+Source the workspace that you already compiled:
+
+    $ source devel/setup.bash
+
+Then open vim/neovim. 
+
+# Debug:
+
+Use `:ALEInfo` inside vim to find out what went wrong.
